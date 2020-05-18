@@ -1,16 +1,24 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { connect } from 'react-redux';
+import {withRouter} from 'react-router-dom'
+import HomeTab from '../containers/HomeTab'
+import ChatRooms from '../containers/ChatRooms'
+import BattleRoom from '../containers/BattleRoom'
 
 function HomePage(props) {
 
+    const [showBattleRoom, setShowBattleRoom] = useState(false)
+
     const handleClick = () => {
-        props.history.push('/chat')
+        props.history.push('/dex')
     }
 
     return (
         <div>
-           <h1>Hi</h1>
-           <button onClick={handleClick}>chat</button>
+           {showBattleRoom ? <BattleRoom /> : <HomeTab />}
+           <ChatRooms></ChatRooms>
+           <button onClick={handleClick}>dex</button>
+           <button onClick={() => {setShowBattleRoom(true)}}>show battleRoom</button>
         </div>
     )
 }
@@ -27,4 +35,4 @@ const mapStateToProps = function(state) {
   }
 
 
-export default connect(mapStateToProps)(HomePage)
+export default connect(mapStateToProps)(withRouter(HomePage))

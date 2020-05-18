@@ -1,39 +1,42 @@
 import React, {useEffect} from 'react';
 import './App.css';
 import { connect } from 'react-redux';
-import { Route, Link, HashRouter as Router, Switch } from 'react-router-dom'
+import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom'
 import {signIn, signOut, requestLocationData, setBrowserHistory} from './StoreManagers/AuthManager'
-import HomePage from './Routes/HomePage'
-import Settings from './Routes/Settings'
-import ChatRoom from './Routes/ChatRoom'
-import data from './mockDB/what.json'
+import HomePage from './routes/HomePage'
+import Dex from './routes/Dex'
+import Replays from './routes/Replays'
+import Forum from './routes/Forum'
+
+/* App is the top level container. Every part of the app will be rendered downstream from this component
+   The paths below are rendered based on pathname. If you want to keep each site separate you'd need a React/Preact
+   repository for each one. Just assume this App component is HomePage if you don't want to use client side routing 
+   for each application.
+*/
 
 function App(props) {
 
   useEffect(() => {
     props.setBrowserHistory(props.browserHistory)
-    console.log(data)
-    // if (true) {
-    //   console.log(props.history)
-    //   props.history.push("/#") // What does history do? It currently pushing the string to the end of the pathname
-    // }
-    // console.log('props', props)
-    // props.requestLocationData()
-    // // eslint-disable-next-line
+    // useEffect is an all-in-one lifecycle component that can run code whenever the page renders
+    // For instance, if I want to log something when the page loads I put:
+    console.log("Log something")
+    // This will run every rerender unless I put the second argument in useEffect. An empty [] runs only once on load,
+    // If I want to run code when values in state change I put those variables in the array [listMons, username, etc]
+    
+    // If I need to run code before the component unloads to prevent memory leakage I can return a function describing cleanup
+    // This is akin to socket unsubscribe methods
+
   }, [])
 
-  // const signIn = () => {props.signIn()}
-  // const signOut = () => {props.signOut()}
-
   return (
-    <Router>
+    <Router history={props.browserHistory} >
       <div className="App">
-        {/* <button onClick={signIn}>Sign In</button>
-        <button onClick={signOut}>Sign Out</button> */}
         <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/chat" component={ChatRoom} />
+          <Route path="/replays" component={Replays} />
+          <Route path="/dex" component={Dex} />
+          <Route path="/forum" component={Forum} />
         </Switch>
       </div>
     </Router>
@@ -55,7 +58,7 @@ const mapDispatchToProps = {
   requestLocationData: requestLocationData,
   signIn: signIn,
   signOut: signOut,
-  setBrowserHistory: setBrowserHistory, 
+  setBrowserHistory: setBrowserHistory
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
